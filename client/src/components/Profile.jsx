@@ -8,6 +8,8 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
+  const [bio, setBio] = useState(""); // 添加了这一行
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -19,6 +21,7 @@ function Profile() {
         });
         setUser(response.data);
         setName(response.data.name);
+        setBio(response.data.bio || ""); // 添加了这一行，如果bio不存在则设置为空字符串
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch user profile");

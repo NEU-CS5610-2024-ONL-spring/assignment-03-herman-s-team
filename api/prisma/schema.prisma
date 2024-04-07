@@ -21,7 +21,7 @@ model User {
 
   email String @unique
 
-  bio       String?
+  bio String?
   
   auth0Id String @unique @default("")
 

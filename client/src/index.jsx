@@ -46,8 +46,6 @@ root.render(
             <Route path="/" element={<Home />} />
             <Route path="/verify-user" element={<VerifyUser />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
-            <Route path="/create" element={<RequireAuth><NoteCreate /></RequireAuth>} />
             <Route
               path="app"
               element={
@@ -56,9 +54,11 @@ root.render(
                 </RequireAuth>
               }
             >
+              <Route index element={<Profile />} />
+              <Route path="create" element={<NoteCreate />} />
             </Route>
-            
           </Routes>
+        
         </BrowserRouter>
       </AuthTokenProvider>
     </Auth0Provider>
