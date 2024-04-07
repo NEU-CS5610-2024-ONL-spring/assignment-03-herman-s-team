@@ -30,19 +30,54 @@ app.get("/ping", (req, res) => {
 
 // requireAuth middleware will validate the access token sent by the client and will return the user information within req.auth
 app.get("/notes", requireAuth, async (req, res) => {
-  const authorId = req.auth.payload.sub;
+  try {
+    const auth0Id = req.auth.payload.sub;
+    const user = await prisma.user.findUnique({
+      where: {
+        auth0Id,
+      },
+    });
 
-  const notes = await prisma.note.findMany({
-    where: {
-      author: { auth0Id: authorId },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  res.json(notes);
+    if (user) {
+      // 如果用户已登录,获取该用户创建的所有笔记
+      const notes = await prisma.note.findMany({
+        where: {
+          authorId: user.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      res.json(notes);
+    } else {
+      // 如果用户未在数据库中找到,返回错误响应
+      res.status(401).json({ error: "Unauthorized" });
+    }
+  } catch (error) {
+    console.error("Error fetching notes:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
+
+app.get("/public/notes", async (req, res) => {
+  try {
+    // 获取所有公开的笔记
+    const notes = await prisma.note.findMany({
+      where: {
+        isPublic: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    res.json(notes);
+  } catch (error) {
+    console.error("Error fetching public notes:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 // creates a note
 app.post("/notes", requireAuth, async (req, res) => {
@@ -157,7 +192,7 @@ app.get("/me", requireAuth, async (req, res) => {
 
 app.put("/me", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
-  const { name } = req.body;
+  const { name,bio } = req.body;
 
   try {
     const updatedUser = await prisma.user.update({
@@ -166,6 +201,7 @@ app.put("/me", requireAuth, async (req, res) => {
       },
       data: {
         name,
+        bio
       },
     });
 

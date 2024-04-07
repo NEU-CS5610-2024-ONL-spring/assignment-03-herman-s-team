@@ -17,7 +17,10 @@ export default function AppLayout() {
         <nav className="menu">
           <ul className="menu-list">
             <li>
-              <Link to="/app">Profile</Link>
+                <Link to="/app">NoteList</Link>
+            </li>
+            <li>
+              <Link to="/app/profile">Profile</Link>
             </li>
             <li>
               <Link to="/app/todos">TODOs</Link>

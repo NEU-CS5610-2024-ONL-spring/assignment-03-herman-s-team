@@ -7,6 +7,8 @@ import VerifyUser from "./components/VerifyUser";
 import AppLayout from "./components/AppLayout";
 import Profile from "./components/Profile";
 import NoteCreate from "./components/NoteCreate";
+import NoteList from "./components/NoteList";
+
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
 
@@ -54,7 +56,9 @@ root.render(
                 </RequireAuth>
               }
             >
-              <Route index element={<Profile />} />
+
+              <Route index element={<NoteList />} />
+              <Route path="profile" element={<Profile />} />
               <Route path="create" element={<NoteCreate />} />
             </Route>
           </Routes>
