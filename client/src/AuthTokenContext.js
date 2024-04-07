@@ -8,11 +8,13 @@ const requestedScopes = ["profile", "email"];
 function AuthTokenProvider({ children }) {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const [accessToken, setAccessToken] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getAccessToken = async () => {
       try {
-        // get access token silently from Auth0, which will be stored in the context
+        setLoading(true);
         const token = await getAccessTokenSilently({
           authorizationParams: {
             audience: process.env.REACT_APP_AUTH0_AUDIENCE,
@@ -20,17 +22,22 @@ function AuthTokenProvider({ children }) {
           },
         });
         setAccessToken(token);
+        setLoading(false);
       } catch (err) {
         console.log(err);
+        setError(err);
+        setLoading(false);
       }
     };
 
     if (isAuthenticated) {
       getAccessToken();
+    } else {
+      setLoading(false);
     }
   }, [getAccessTokenSilently, isAuthenticated]);
 
-  const value = { accessToken };
+  const value = { accessToken, loading, error };
   return (
     <AuthTokenContext.Provider value={value}>
       {children}

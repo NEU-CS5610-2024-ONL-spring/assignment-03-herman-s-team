@@ -1,5 +1,3 @@
-import "../style/appLayout.css";
-
 import { useEffect } from "react";
 import { useAuthToken } from "../AuthTokenContext";
 import { useNavigate } from "react-router-dom";
