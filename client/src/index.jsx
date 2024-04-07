@@ -1,6 +1,9 @@
 import React from "react";
 import * as ReactDOMClient from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from '@mui/material/CssBaseline';
+
 import NotFound from "./components/NotFound";
 import Home from "./components/Home";
 import VerifyUser from "./components/VerifyUser";
@@ -10,7 +13,7 @@ import NoteCreate from "./components/NoteCreate";
 import NoteList from "./components/NoteList";
 import NoteDetails from "./components/NoteDetails";
 import PublicNoteDetails from "./components/PublicNoteDetails";
-
+import theme from "./theme";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
 
@@ -34,7 +37,11 @@ function RequireAuth({ children }) {
 
 
 root.render(
+
   <React.StrictMode>
+      <ThemeProvider theme={theme}>
+      <CssBaseline />
+
     <Auth0Provider
       domain={process.env.REACT_APP_AUTH0_DOMAIN}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
@@ -72,5 +79,9 @@ root.render(
         </BrowserRouter>
       </AuthTokenProvider>
     </Auth0Provider>
+
+  </ThemeProvider>
+
   </React.StrictMode>
+
 );

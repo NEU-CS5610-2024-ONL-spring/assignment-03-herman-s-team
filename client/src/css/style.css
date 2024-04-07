@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+  }
+
+
+  .header-filter {
+    minHeight: 33vh;
+    backgroundImage: url("path/to/your/background-image.jpg");
+    backgroundSize: cover;
+    backgroundPosition: center;
+    position: relative; /* 确保伪元素相对于这个元素定位 */
+  }
+  
+  .header-filter::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* 半透明黑色遮罩层 */
+  }
+  
