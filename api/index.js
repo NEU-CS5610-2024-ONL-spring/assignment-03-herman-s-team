@@ -123,6 +123,7 @@ app.delete("/notes/:id", requireAuth, async (req, res) => {
   }
 });
 
+
 // get a note by id
 app.get("/notes/:id", requireAuth, async (req, res) => {
   const noteId = parseInt(req.params.id);
@@ -132,6 +133,25 @@ app.get("/notes/:id", requireAuth, async (req, res) => {
     where: {
       id: noteId,
       author: { auth0Id: authorId },
+    },
+  });
+
+  if (!note) {
+    res.status(404).send("Note not found");
+  } else {
+    res.json(note);
+  }
+});
+
+
+// get a public note by id
+app.get("/public/notes/:id", async (req, res) => {
+  const noteId = parseInt(req.params.id);
+
+  const note = await prisma.note.findFirst({
+    where: {
+      id: noteId,
+      isPublic: true,
     },
   });
 

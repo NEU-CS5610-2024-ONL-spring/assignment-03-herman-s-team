@@ -8,6 +8,8 @@ import AppLayout from "./components/AppLayout";
 import Profile from "./components/Profile";
 import NoteCreate from "./components/NoteCreate";
 import NoteList from "./components/NoteList";
+import NoteDetails from "./components/NoteDetails";
+import PublicNoteDetails from "./components/PublicNoteDetails";
 
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
@@ -48,6 +50,8 @@ root.render(
             <Route path="/" element={<Home />} />
             <Route path="/verify-user" element={<VerifyUser />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/public/notes/:noteId" element={<PublicNoteDetails />} />
+
             <Route
               path="app"
               element={
@@ -60,6 +64,8 @@ root.render(
               <Route index element={<NoteList />} />
               <Route path="profile" element={<Profile />} />
               <Route path="create" element={<NoteCreate />} />
+              <Route path="details/:noteId" element={<NoteDetails />} />
+
             </Route>
           </Routes>
         
