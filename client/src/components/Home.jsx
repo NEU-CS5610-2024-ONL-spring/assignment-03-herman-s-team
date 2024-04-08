@@ -23,12 +23,16 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import '../css/style.css'; // 导入 CSS 文件
 
+import { useMediaQuery, useTheme } from "@mui/material";
+
+
 export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [publicNotes, setPublicNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   useEffect(() => {
     const fetchPublicNotes = async () => {
       try {
@@ -53,9 +57,10 @@ export default function Home() {
 
   return (
     <>
-<AppBar position="fixed" sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}  style={{zIndex: 3 }} >
-        <Toolbar sx={{ height: 150 }}>
-          <img src={logo} alt="Logo" style={{ height: 90, marginLeft: 20}} />
+  
+    <AppBar position="fixed" sx={{ backgroundColor: 'transparent', boxShadow: 'none', height: isMobile ? 120 : 150 }}>
+        <Toolbar sx={{  height: isMobile ? 120 : 150 }}>
+          <img src={logo} alt="Logo" style={{ height: isMobile ? 70 : 90, marginLeft: isMobile ? 10 : 20 }} />
           <Box sx={{ flexGrow: 1 }} />
           {!isAuthenticated ? (
             <>
@@ -80,9 +85,9 @@ export default function Home() {
           <div className="header-content">
 <h1 style={{ fontFamily:'roboto'}}>      My Journal
     </h1>
-<h3 style={{ fontFamily:'roboto'}}> This is a place where we share our thoughts, experiences, and stories with the world. </h3>
-  <h3 style={{ fontFamily:'roboto'}}>Feel free to explore and discover the notes that resonate with you.
-   </h3>       
+<h2 style={{ fontFamily:'roboto'}}> This is a place where we share our thoughts, experiences, and stories with the world. </h2>
+  <h2 style={{ fontFamily:'roboto'}}>Feel free to explore and discover the notes that resonate with you.
+   </h2>       
   </div>
   </div>
   
@@ -101,7 +106,7 @@ export default function Home() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton>
+                <IconButton aria-label="search">
                   <SearchIcon />
                 </IconButton>
               </InputAdornment>
