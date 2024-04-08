@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuthToken } from "../AuthTokenContext";
+import { Container, Typography, TextField, Button, Box, Grid, FormControlLabel, Checkbox } from "@mui/material";
 
 function NoteCreate() {
   const { accessToken } = useAuthToken();
@@ -32,38 +33,58 @@ function NoteCreate() {
   };
 
   return (
-    <div className="note-create">
-      <h2>Create a New Note</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title:
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Content:
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Public:
-          <input
-            type="checkbox"
-            checked={isPublic}
-            onChange={(e) => setIsPublic(e.target.checked)}
-          />
-        </label>
-        <button type="submit">Create</button>
-      </form>
-      {error && <p>{error}</p>}
-    </div>
+    <Container maxWidth="sm">
+      <Box my={4}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Create a New Note
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Title"
+                fullWidth
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Content"
+                fullWidth
+                multiline
+                rows={8}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isPublic}
+                    onChange={(e) => setIsPublic(e.target.checked)}
+                  />
+                }
+                label="Public"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary">
+                Create
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+        {error && (
+          <Typography color="error" mt={2}>
+            {error}
+          </Typography>
+        )}
+      </Box>
+    </Container>
   );
 }
 

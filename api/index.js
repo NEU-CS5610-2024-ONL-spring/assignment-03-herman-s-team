@@ -208,6 +208,26 @@ app.get("/favorites", requireAuth, async (req, res) => {
   }
 });
 
+// 获取用户收藏的所有笔记
+app.get("/favoritedNotes", requireAuth, async (req, res) => {
+  const userId = req.auth.payload.sub;
+
+  try {
+    const favoritedNotes = await prisma.favorite.findMany({
+      where: {
+        user: { auth0Id: userId },
+      },
+      select: {
+        note: true,
+      },
+    });
+
+    res.json(favoritedNotes.map((favorite) => favorite.note));
+  } catch (error) {
+    console.error("Failed to fetch favorited notes", error);
+    res.status(500).json({ error: "Failed to fetch favorited notes" });
+  }
+});
 
 app.post("/favorites", requireAuth, async (req, res) => {
   const { noteId } = req.body;
@@ -274,7 +294,7 @@ app.get("/me", requireAuth, async (req, res) => {
 
 app.put("/me", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
-  const { name,bio } = req.body;
+  const { name, bio } = req.body;
 
   try {
     const updatedUser = await prisma.user.update({
@@ -283,11 +303,17 @@ app.put("/me", requireAuth, async (req, res) => {
       },
       data: {
         name,
-        bio
+        bio,
+      },
+      include: {
+        notes: true,
       },
     });
 
-    res.json(updatedUser);
+    res.json({
+      ...updatedUser,
+      notesCount: updatedUser.notes.length,
+    });
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).send("Error updating user");

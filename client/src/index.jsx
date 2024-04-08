@@ -13,6 +13,8 @@ import NoteCreate from "./components/NoteCreate";
 import NoteList from "./components/NoteList";
 import NoteDetails from "./components/NoteDetails";
 import PublicNoteDetails from "./components/PublicNoteDetails";
+import AuthDebugger from "./components/AuthDebugger";
+
 import theme from "./theme";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
@@ -72,6 +74,7 @@ root.render(
               <Route path="profile" element={<Profile />} />
               <Route path="create" element={<NoteCreate />} />
               <Route path="details/:noteId" element={<NoteDetails />} />
+              <Route path="debugger" element={<AuthDebugger />} />
 
             </Route>
           </Routes>

@@ -21,6 +21,7 @@ import {
   CardMedia,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import '../css/style.css'; // 导入 CSS 文件
 
 export default function Home() {
   const navigate = useNavigate();
@@ -73,61 +74,28 @@ export default function Home() {
         </Toolbar>
       </AppBar>
     
-      <div style={{ backgroundColor: '#b5b49a',   // 使用模板字符串和变量
-padding: '0px', margin: '0px', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',backgroundPosition: 'center' }}>
-  
-      <div style={{
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center', // 水平居中
-  justifyContent: 'center', // 垂直居中
-  textAlign: 'center',
-  backgroundImage: `url(${bgImage})`,
-  backgroundPosition: 'center',
-  backgroundSize: 'cover', 
-  marginTop: '0px',
-  marginBottom: '20px',
-  height: '60vh', // 使用视口高度
-  width: '100%', // 确保父容器宽度为100%
-  alignItems: 'center',
-}}> 
-  <div style={{
-    position: 'absolute', // 覆盖层绝对定位
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 半透明覆盖层
-    zIndex: 1, // 确保覆盖层位于内容之上
-    height: '60vh', // 使用视口高度
-  }} />
-
- <div style={{
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  color: 'white',
-  zIndex: 2, // 确保文本内容位于覆盖层之上
-
-}}>
-<h1 style={{ fontFamily:'roboto'}}>      My Personal Journal
+      <div className="home-container">
+        <div className="header-container" style={{ backgroundImage: `url(${bgImage})` }}>
+          <div className="overlay" />
+          <div className="header-content">
+<h1 style={{ fontFamily:'roboto'}}>      My Journal
     </h1>
-       <h3 style={{ fontFamily:'roboto'}} >Welcome to My Personal Journal</h3> 
-<h3 style={{ fontFamily:'roboto'}}> This is a place where I share my thoughts, experiences, and stories with the world. </h3>
+<h3 style={{ fontFamily:'roboto'}}> This is a place where we share our thoughts, experiences, and stories with the world. </h3>
   <h3 style={{ fontFamily:'roboto'}}>Feel free to explore and discover the notes that resonate with you.
    </h3>       
   </div>
   </div>
   
-  <div style={{ backgroundColor: 'white', borderRadius: '4px', boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',marginTop:'-80px', padding: '1rem', width: 'calc(100% - 2cm)', height: 'calc(100vh - 2cm)', display: 'flex', flexDirection: 'column',zIndex: 2 }}>
-    
+  <div className="content-container">
+  
+  <Grid container justifyContent="center">
+    <Grid item xs={12} sm={8} md={6}>
       <Box my={4}>
         <TextField
           label="Search Notes"
           variant="outlined"
           size="small"
+          fullWidth
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{
@@ -141,10 +109,13 @@ padding: '0px', margin: '0px', minHeight: '100vh', display: 'flex', flexDirectio
           }}
         />
       </Box>
+    </Grid>
+  </Grid>
       <Grid container spacing={4}>
         {filteredNotes.map((note) => (
-          <Grid item key={note.id} xs={12} sm={6} md={4}>
-            <Card>
+          <Grid item key={note.id} xs={12} sm={12} md={12} style={{ display: 'flex', justifyContent: 'center' }}>
+
+            <Card style={{width:'80%'}}>
               <CardMedia
                 height="140"
                 alt={note.title}

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useAuthToken } from "../AuthTokenContext";
 import axios from "axios";
+import { TextField, Button, Grid } from "@mui/material";
+import "../css/profile.css";
+import FavoriteNoteList from "./FavoriteNoteList";
 
 function Profile() {
   const { accessToken } = useAuthToken();
@@ -21,7 +24,7 @@ function Profile() {
         });
         setUser(response.data);
         setName(response.data.name);
-        setBio(response.data.bio || ""); // 添加了这一行，如果bio不存在则设置为空字符串
+        setBio(response.data.bio || ""); 
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch user profile");
@@ -59,42 +62,60 @@ function Profile() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className="profile">
-      <h1>User Profile</h1>
-      {user ? (
-        <div>
-          <form onSubmit={handleSubmit}>
-  <label>
-    Name:
-    <input
-      type="text"
-      value={name}
-      onChange={(e) => setName(e.target.value)}
-    />
-  </label>
-  <label>
-    Bio:
-    <textarea
-      value={bio}
-      onChange={(e) => setBio(e.target.value)}
-    />
-  </label>
-  <button type="submit">Update</button>
-</form>
-          {error && <p>{error}</p>}
-          <p>Email: {user.email}</p>
-          <p>Created At: {new Date(user.createdAt).toLocaleDateString()}</p>
-          <p>Updated At: {new Date(user.updatedAt).toLocaleDateString()}</p>
-          <p>Number of Notes: {user.notesCount}</p>
-        </div>
-      ) : (
-        <p>No user data available</p>
-      )}
-      
+      <div className="profile-header">
+       
+        <h1 className="profile-name">{user?.name}</h1>
+        <p className="profile-bio">{user?.bio}</p>
+      </div>
+
+      <div className="profile-section">
+        <h2 className="profile-section-title">User Information</h2>
+        <p className="profile-section-content">Email: {user?.email}</p>
+        <p className="profile-section-content">
+          Created At: {new Date(user?.createdAt).toLocaleDateString()}
+        </p>
+        <p className="profile-section-content">
+          Updated At: {new Date(user?.updatedAt).toLocaleDateString()}
+        </p>
+        <p className="profile-section-content">Number of Notes: {user?.notesCount}</p>
+      </div>
+
+      <form className="profile-form" onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Name"
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Bio"
+              fullWidth
+              multiline
+              rows={4}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary">
+              Update
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+
+      {error && <p className="profile-error">{error}</p>}
+
+      <div className="profile-section">
+        <FavoriteNoteList />
+      </div>
     </div>
   );
 }
-
 export default Profile;

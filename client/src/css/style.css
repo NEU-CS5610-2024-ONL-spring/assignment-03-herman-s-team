@@ -5,7 +5,7 @@ body {
 
   .header-filter {
     minHeight: 33vh;
-    backgroundImage: url("path/to/your/background-image.jpg");
+    backgroundImage: url("../assets/images/bg1.jpg");
     backgroundSize: cover;
     backgroundPosition: center;
     position: relative; /* 确保伪元素相对于这个元素定位 */
@@ -21,3 +21,73 @@ body {
     background: rgba(0, 0, 0, 0.5); /* 半透明黑色遮罩层 */
   }
   
+
+  /* Home.css */
+
+.home-container {
+    background-color: #b5b49a;
+    padding: 0px;
+    margin: 0px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-position: center;
+  }
+  
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-position: center;
+    background-size: cover;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    height: 50vh;
+    width: 100%;
+    align-items: center;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    height: 50vh;
+  }
+  
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-top: 180px;
+    z-index: 2;
+  }
+  
+  .header-content h1,
+  .header-content h3 {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .content-container {
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: -80px;
+    padding: 1rem;
+    width: calc(100% - 2cm);
+    height: calc(100vh - 2cm);
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+    overflow-y: auto;
+  }
