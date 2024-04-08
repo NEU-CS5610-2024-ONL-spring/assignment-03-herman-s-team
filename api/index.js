@@ -81,7 +81,7 @@ app.get("/public/notes", async (req, res) => {
 
 // creates a note
 app.post("/notes", requireAuth, async (req, res) => {
-  const { title, content ,isPublic} = req.body;
+  const { title, content, isPublic, location } = req.body;
   const authorId = req.auth.payload.sub;
 
   if (!title || !content) {
@@ -92,6 +92,7 @@ app.post("/notes", requireAuth, async (req, res) => {
         title,
         content,
         isPublic,
+        location,
         author: { connect: { auth0Id: authorId } },
       },
     });

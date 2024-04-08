@@ -45,6 +45,8 @@ model Note {
   content String @db.VarChar(10000)
 
   isPublic  Boolean  @default(false)
+    location  String?  @db.VarChar(255)
+
 
   createdAt DateTime @default(now())
 
@@ -67,5 +69,4 @@ model Favorite {
   createdAt DateTime @default(now())
 
   @@unique([userId, noteId])
-
 }

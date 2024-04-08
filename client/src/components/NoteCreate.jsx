@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect  } from "react";
 import axios from "axios";
 import { useAuthToken } from "../AuthTokenContext";
 import { Container, Typography, TextField, Button, Box, Grid, FormControlLabel, Checkbox } from "@mui/material";
@@ -9,6 +9,24 @@ function NoteCreate() {
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [error, setError] = useState(null);
+  const [location, setLocation] = useState(null); 
+
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const res = await axios.get("https://ipapi.co/json/"); // 使用 ipapi.co IP Geolocation API
+        setLocation({
+          country: res.data.country_name,
+          city: res.data.city,
+        });
+      } catch (error) {
+        console.error("Failed to fetch location:", error);
+      }
+    };
+
+    fetchLocation();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +89,14 @@ function NoteCreate() {
                 label="Public"
               />
             </Grid>
+            <Grid item xs={12}>
+  <TextField
+    label="Location"
+    fullWidth
+    value={location ? `${location.country}, ${location.city}` : ""}
+    disabled // 可选,禁用编辑
+  />
+</Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
                 Create
