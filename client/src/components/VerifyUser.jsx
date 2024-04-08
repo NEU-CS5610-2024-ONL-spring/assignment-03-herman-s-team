@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAuthToken } from "../AuthTokenContext";
 import { useNavigate } from "react-router-dom";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 export default function VerifyUser() {
   const navigate = useNavigate();
@@ -29,5 +30,21 @@ export default function VerifyUser() {
     }
   }, [accessToken, navigate]);
 
-  return <div className="loading">Loading...</div>;
-}
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      bgcolor="background.default"
+      color="text.primary"
+    >
+      <Box textAlign="center">
+        <CircularProgress size={80} />
+        <Typography variant="h5" mt={4}>
+          Verifying user...
+        </Typography>
+      </Box>
+    </Box>
+  );}
