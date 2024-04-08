@@ -187,6 +187,68 @@ app.put("/notes/:id", requireAuth, async (req, res) => {
   }
 });
 
+
+// 检查笔记是否被收藏
+app.get("/favorites", requireAuth, async (req, res) => {
+  const { noteId } = req.query;
+  const userId = req.auth.payload.sub;
+
+  try {
+    const favorites = await prisma.favorite.findMany({
+      where: {
+        noteId: parseInt(noteId),
+        user: { auth0Id: userId },
+      },
+    });
+
+    res.json(favorites);
+  } catch (error) {
+    console.error("Failed to fetch favorites", error);
+    res.status(500).json({ error: "Failed to fetch favorites" });
+  }
+});
+
+
+app.post("/favorites", requireAuth, async (req, res) => {
+  const { noteId } = req.body;
+  const userId = req.auth.payload.sub;
+
+  try {
+    const favorite = await prisma.favorite.create({
+      data: {
+        note: { connect: { id: parseInt(noteId) } },
+        user: { connect: { auth0Id: userId } },
+      },
+    });
+
+    res.json(favorite);
+  } catch (error) {
+    console.error("Failed to add favorite", error);
+    res.status(500).json({ error: "Failed to add favorite" });
+  }
+});
+
+
+// 删除收藏
+app.delete("/favorites", requireAuth, async (req, res) => {
+  const { noteId } = req.query;
+  const userId = req.auth.payload.sub;
+
+  try {
+    await prisma.favorite.deleteMany({
+      where: {
+        noteId: parseInt(noteId),
+        user: { auth0Id: userId },
+      },
+    });
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Failed to remove favorite", error);
+    res.status(500).json({ error: "Failed to remove favorite" });
+  }
+});
+
 // get Profile information of authenticated user
 app.get("/me", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
