@@ -41,8 +41,21 @@ function Profile() {
     }
   }, [accessToken]);
 
+
+  const validateData = () => {
+    if (name.trim() === "") {
+      setError("Name cannot be empty");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateData()) {
+      return;
+    }
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/me`, {
@@ -53,9 +66,11 @@ function Profile() {
         },
         body: JSON.stringify({ name, bio }),
       });
+
       if (!response.ok) {
         throw new Error('Failed to update user profile');
       }
+
       const data = await response.json();
       setUser(data);
       setError(null);
@@ -96,6 +111,7 @@ function Profile() {
               fullWidth
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required 
             />
           </Grid>
           <Grid item xs={12}>

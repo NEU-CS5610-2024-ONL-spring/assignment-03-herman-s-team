@@ -38,9 +38,31 @@ function NoteCreate() {
     fetchLocation();
   }, []);
 
+
+  const validateData = () => {
+    if (title.trim() === "") {
+      setError("Title cannot be empty");
+      return false;
+    }
+    if (content.trim() === "") {
+      setError("Content cannot be empty");
+      return false;
+    }
+    return true;
+  };
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateData()) {
+        return;
+      }  
+
     try {
+
       const res = await fetch(`${process.env.REACT_APP_API_URL}/notes`, {
         method: "POST",
         headers: {

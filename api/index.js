@@ -86,7 +86,15 @@ app.post("/notes", requireAuth, async (req, res) => {
 
   if (!title || !content) {
     res.status(400).send("Title and content are required");
-  } else {
+    return;
+  }
+
+  if (typeof isPublic !== "boolean") {
+    res.status(400).send("isPublic must be a boolean");
+    return;
+  }
+
+  try {
     const newNote = await prisma.note.create({
       data: {
         title,
@@ -98,6 +106,9 @@ app.post("/notes", requireAuth, async (req, res) => {
     });
 
     res.status(201).json(newNote);
+  } catch (error) {
+    console.error("Error creating note:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -169,22 +180,32 @@ app.put("/notes/:id", requireAuth, async (req, res) => {
   const authorId = req.auth.payload.sub;
   const { title, content } = req.body;
 
-  const note = await prisma.note.findFirst({
-    where: {
-      id: noteId,
-      author: { auth0Id: authorId },
-    },
-  });
+  if (!title || !content) {
+    res.status(400).send("Title and content are required");
+    return;
+  }
 
-  if (!note) {
-    res.status(404).send("Note not found");
-  } else {
-    const updatedNote = await prisma.note.update({
-      where: { id: noteId },
-      data: { title, content },
+  try {
+    const note = await prisma.note.findFirst({
+      where: {
+        id: noteId,
+        author: { auth0Id: authorId },
+      },
     });
 
-    res.json(updatedNote);
+    if (!note) {
+      res.status(404).send("Note not found");
+    } else {
+      const updatedNote = await prisma.note.update({
+        where: { id: noteId },
+        data: { title, content },
+      });
+
+      res.json(updatedNote);
+    }
+  } catch (error) {
+    console.error("Error updating note:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -296,6 +317,11 @@ app.get("/me", requireAuth, async (req, res) => {
 app.put("/me", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
   const { name, bio } = req.body;
+
+  if (!name) {
+    res.status(400).send("Name is required");
+    return;
+  }
 
   try {
     const updatedUser = await prisma.user.update({
