@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from '../assets/images/myj.png'; 
-import bgImage from '../assets/images/bg1.jpg'; // 确保这里的路径正确
-import axios from "axios";
+import bgImage from '../assets/images/bg1.jpg'; 
 import {
   AppBar,
   Toolbar,
@@ -36,8 +35,12 @@ export default function Home() {
   useEffect(() => {
     const fetchPublicNotes = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/public/notes`);
-        setPublicNotes(response.data);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/public/notes`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch public notes');
+        }
+        const data = await response.json();
+        setPublicNotes(data);
       } catch (error) {
         console.error("Failed to fetch public notes:", error);
       }

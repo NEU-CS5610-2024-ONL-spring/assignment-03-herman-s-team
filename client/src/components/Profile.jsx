@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuthToken } from "../AuthTokenContext";
-import axios from "axios";
 import { TextField, Button, Grid } from "@mui/material";
 import "../css/profile.css";
 import FavoriteNoteList from "./FavoriteNoteList";
@@ -13,18 +12,21 @@ function Profile() {
   const [name, setName] = useState("");
   const [bio, setBio] = useState(""); // 添加了这一行
 
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/me`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/me`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setUser(response.data);
-        setName(response.data.name);
-        setBio(response.data.bio || ""); 
+        if (!response.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+        const data = await response.json();
+        setUser(data);
+        setName(data.name);
+        setBio(data.bio || "");
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch user profile");
@@ -43,21 +45,25 @@ function Profile() {
     e.preventDefault();
 
     try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/me`,
-        { name,bio },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setUser(response.data);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/me`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ name, bio }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update user profile');
+      }
+      const data = await response.json();
+      setUser(data);
       setError(null);
     } catch (error) {
       setError("Failed to update user profile");
     }
   };
+
 
   if (loading) {
     return <div>Loading...</div>;

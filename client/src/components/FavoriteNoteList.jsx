@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuthToken } from "../AuthTokenContext";
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -8,29 +7,34 @@ function FavoriteNoteList() {
   const { accessToken } = useAuthToken();
   const [favoriteNotes, setFavoriteNotes] = useState([]);
 
-
   useEffect(() => {
     const fetchFavoriteNotes = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/favoritedNotes`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/favoritedNotes`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setFavoriteNotes(response.data);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch favorite notes");
+        }
+
+        const data = await response.json();
+        setFavoriteNotes(data);
       } catch (error) {
         console.error("Failed to fetch favorite notes:", error);
       }
     };
-  
+
     if (accessToken) {
       fetchFavoriteNotes();
     }
   }, [accessToken]);
-  return (
 
+  return (
     <div>
-        <br></br>
+      <br></br>
       <Typography variant="h5" gutterBottom>
         Favorite Notes
       </Typography>
@@ -48,4 +52,5 @@ function FavoriteNoteList() {
     </div>
   );
 }
+
 export default FavoriteNoteList;

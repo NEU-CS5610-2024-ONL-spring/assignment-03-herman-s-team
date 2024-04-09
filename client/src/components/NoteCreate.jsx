@@ -1,7 +1,15 @@
-import React, { useState,useEffect  } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useAuthToken } from "../AuthTokenContext";
-import { Container, Typography, TextField, Button, Box, Grid, FormControlLabel, Checkbox } from "@mui/material";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 
 function NoteCreate() {
   const { accessToken } = useAuthToken();
@@ -9,38 +17,41 @@ function NoteCreate() {
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [error, setError] = useState(null);
-  const [location, setLocation] = useState(null); 
-
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const res = await axios.get("https://ipapi.co/json/"); // 使用 ipapi.co IP Geolocation API
+        const res = await fetch("https://ipapi.co/json/"); // 使用 ipapi.co IP Geolocation API
+        if (!res.ok) {
+          throw new Error("Failed to fetch location");
+        }
+        const data = await res.json();
         setLocation({
-          country: res.data.country_name,
-          city: res.data.city,
+          country: data.country_name,
+          city: data.city,
         });
       } catch (error) {
         console.error("Failed to fetch location:", error);
       }
     };
-
     fetchLocation();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/notes`,
-        { title, content, isPublic },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/notes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ title, content, isPublic }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to create note");
+      }
       setTitle("");
       setContent("");
       setIsPublic(false);
@@ -90,13 +101,13 @@ function NoteCreate() {
               />
             </Grid>
             <Grid item xs={12}>
-  <TextField
-    label="Location"
-    fullWidth
-    value={location ? `${location.country}, ${location.city}` : ""}
-    disabled // 可选,禁用编辑
-  />
-</Grid>
+              <TextField
+                label="Location"
+                fullWidth
+                value={location ? `${location.country}, ${location.city}` : ""}
+                disabled // 可选,禁用编辑
+              />
+            </Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
                 Create
@@ -104,11 +115,7 @@ function NoteCreate() {
             </Grid>
           </Grid>
         </form>
-        {error && (
-          <Typography color="error" mt={2}>
-            {error}
-          </Typography>
-        )}
+        {error && <Typography color="error" mt={2}>{error}</Typography>}
       </Box>
     </Container>
   );

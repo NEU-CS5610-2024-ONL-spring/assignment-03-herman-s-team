@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuthToken } from "../AuthTokenContext";
 import { Link } from "react-router-dom";
 import { Typography, Grid, Card, CardContent, CardActions, Button, CircularProgress } from "@mui/material";
@@ -16,13 +15,16 @@ function NoteList() {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/notes`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/notes`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setNotes(response.data);
+        if (!response.ok) {
+          throw new Error('Failed to fetch notes');
+        }
+        const data = await response.json();
+        setNotes(data);
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch notes");

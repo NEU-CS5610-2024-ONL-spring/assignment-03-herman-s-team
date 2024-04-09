@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams,useNavigate  } from "react-router-dom";
-import axios from "axios";
 import { useAuthToken } from "../AuthTokenContext";
 
 function NoteDetails() {
@@ -13,15 +12,18 @@ function NoteDetails() {
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-
     const fetchNote = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/notes/${noteId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/notes/${noteId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setNote(response.data);
+        if (!response.ok) {
+          throw new Error('Failed to fetch note');
+        }
+        const data = await response.json();
+        setNote(data);
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch note");
@@ -32,50 +34,55 @@ function NoteDetails() {
     fetchNote();
 
     const checkFavorite = async () => {
-        try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/favorites`, {
-            params: { noteId },
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          setIsFavorite(response.data.length > 0);
-        } catch (error) {
-          console.error("Failed to check favorite", error);
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/favorites?noteId=${noteId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to check favorite');
         }
-      };
-  
-      checkFavorite()
+        const data = await response.json();
+        setIsFavorite(data.length > 0);
+      } catch (error) {
+        console.error("Failed to check favorite", error);
+      }
+    };
 
-
-
+    checkFavorite();
   }, [noteId, accessToken]);
 
-  
   const toggleFavorite = async () => {
     try {
       if (isFavorite) {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/favorites`, {
-          params: { noteId },
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/favorites?noteId=${noteId}`, {
+          method: 'DELETE',
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        if (!response.ok) {
+          throw new Error('Failed to remove favorite');
+        }
       } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/favorites`, {
-          noteId,
-        }, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/favorites`, {
+          method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
           },
+          body: JSON.stringify({ noteId }),
         });
+        if (!response.ok) {
+          throw new Error('Failed to add favorite');
+        }
       }
       setIsFavorite(!isFavorite);
     } catch (error) {
       console.error("Failed to toggle favorite", error);
     }
   };
-
   if (loading) {
     return <div>Loading...</div>;
   }
