@@ -22,7 +22,7 @@ function NoteCreate() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const res = await fetch("https://ipapi.co/json/"); // 使用 ipapi.co IP Geolocation API
+        const res = await fetch("https://ipapi.co/json/"); // use ipapi.co IP Geolocation API
         if (!res.ok) {
           throw new Error("Failed to fetch location");
         }
@@ -127,7 +127,7 @@ function NoteCreate() {
                 label="Location"
                 fullWidth
                 value={location ? `${location.country}, ${location.city}` : ""}
-                disabled // 可选,禁用编辑
+                disabled 
               />
             </Grid>
             <Grid item xs={12}>

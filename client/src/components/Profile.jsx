@@ -10,8 +10,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [name, setName] = useState("");
-  const [bio, setBio] = useState(""); // 添加了这一行
-
+  const [bio, setBio] = useState(""); 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {

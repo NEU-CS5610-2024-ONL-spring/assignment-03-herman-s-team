@@ -1,7 +1,5 @@
 
-/* 响应式设计 */
 @media screen and (max-width: 600px) {
-    /* 针对手机屏幕的样式 */
     .header-content {
       margin-top: 10px;
       font-size: small;
@@ -50,7 +48,7 @@ body {
     backgroundImage: url("../assets/images/bg1.jpg");
     backgroundSize: cover;
     backgroundPosition: center;
-    position: relative; /* 确保伪元素相对于这个元素定位 */
+    position: relative; 
   }
   
   .header-filter::before {
@@ -60,7 +58,7 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.5); /* 半透明黑色遮罩层 */
+    background: rgba(0, 0, 0, 0.5); 
   }
   
 

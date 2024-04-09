@@ -39,7 +39,7 @@ app.get("/notes", requireAuth, async (req, res) => {
     });
 
     if (user) {
-      // 如果用户已登录,获取该用户创建的所有笔记
+      // if the user is found in our database, return all notes created by the user
       const notes = await prisma.note.findMany({
         where: {
           authorId: user.id,
@@ -50,7 +50,7 @@ app.get("/notes", requireAuth, async (req, res) => {
       });
       res.json(notes);
     } else {
-      // 如果用户未在数据库中找到,返回错误响应
+      // if the user is not found in our database, return 401 Unauthorized
       res.status(401).json({ error: "Unauthorized" });
     }
   } catch (error) {
@@ -62,7 +62,7 @@ app.get("/notes", requireAuth, async (req, res) => {
 
 app.get("/public/notes", async (req, res) => {
   try {
-    // 获取所有公开的笔记
+    // get all public notes
     const notes = await prisma.note.findMany({
       where: {
         isPublic: true,
@@ -210,7 +210,7 @@ app.put("/notes/:id", requireAuth, async (req, res) => {
 });
 
 
-// 检查笔记是否被收藏
+// check if a note is favorited by the authenticated user
 app.get("/favorites", requireAuth, async (req, res) => {
   const { noteId } = req.query;
   const userId = req.auth.payload.sub;
@@ -230,7 +230,7 @@ app.get("/favorites", requireAuth, async (req, res) => {
   }
 });
 
-// 获取用户收藏的所有笔记
+// get all favorited notes by the authenticated user
 app.get("/favoritedNotes", requireAuth, async (req, res) => {
   const userId = req.auth.payload.sub;
 
@@ -271,7 +271,7 @@ app.post("/favorites", requireAuth, async (req, res) => {
 });
 
 
-// 删除收藏
+// delete a favorite
 app.delete("/favorites", requireAuth, async (req, res) => {
   const { noteId } = req.query;
   const userId = req.auth.payload.sub;
