@@ -20,10 +20,9 @@ import {
   CardMedia,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import '../css/style.css'; // 导入 CSS 文件
-
+import '../css/style.css';
 import { useMediaQuery, useTheme } from "@mui/material";
-
+import PublicNoteDetails from "./PublicNoteDetails";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -32,6 +31,8 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
+
   useEffect(() => {
     const fetchPublicNotes = async () => {
       try {
@@ -58,10 +59,17 @@ export default function Home() {
     note.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleReadMore = (noteId) => {
+    setSelectedNoteId(noteId);
+  };
+
+  const handleClose = () => {
+    setSelectedNoteId(null);
+  };
+
   return (
     <>
-  
-    <AppBar position="fixed" sx={{ backgroundColor: 'transparent', boxShadow: 'none', height: isMobile ? 120 : 150 }}>
+      <AppBar position="fixed" sx={{ backgroundColor: 'transparent', boxShadow: 'none', height: isMobile ? 120 : 150 }}>
         <Toolbar sx={{  height: isMobile ? 120 : 150 }}>
           <img src={logo} alt="Logo" style={{ height: isMobile ? 70 : 90, marginLeft: isMobile ? 10 : 20 }} />
           <Box sx={{ flexGrow: 1 }} />
@@ -86,69 +94,69 @@ export default function Home() {
         <div className="header-container" style={{ backgroundImage: `url(${bgImage})` }}>
           <div className="overlay" />
           <div className="header-content">
-<h1 style={{ fontFamily:'roboto'}}>      My Journal
-    </h1>
-<h2 style={{ fontFamily:'roboto'}}> This is a place where we share our thoughts, experiences, and stories with the world. </h2>
-  <h2 style={{ fontFamily:'roboto'}}>Feel free to explore and discover the notes that resonate with you.
-   </h2>       
-  </div>
-  </div>
+            <h1 style={{ fontFamily:'roboto'}}>My Journal</h1>
+            <h2 style={{ fontFamily:'roboto'}}> This is a place where we share our thoughts, experiences, and stories with the world. </h2>
+            <h2 style={{ fontFamily:'roboto'}}>Feel free to explore and discover the notes that resonate with you.</h2>       
+          </div>
+        </div>
   
-  <div className="content-container">
-  
-  <Grid container justifyContent="center">
-    <Grid item xs={12} sm={8} md={6}>
-      <Box my={4}>
-        <TextField
-          label="Search Notes"
-          variant="outlined"
-          size="small"
-          fullWidth
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
-    </Grid>
-  </Grid>
-      <Grid container spacing={4}>
-        {filteredNotes.map((note) => (
-          <Grid item key={note.id} xs={12} sm={12} md={12} style={{ display: 'flex', justifyContent: 'center' }}>
-
-            <Card style={{width:'80%'}}>
-              <CardMedia
-                height="140"
-                alt={note.title}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {note.title}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {note.content.substring(0, 100)}...
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" color="primary" component={Link} to={`/public/notes/${note.id}`}>
-                  Read More
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-    </div>
-  </div>
+        <div className="content-container">
+          {selectedNoteId ? (
+            <PublicNoteDetails noteId={selectedNoteId} onClose={handleClose} />
+          ) : (
+            <>
+              <Grid container justifyContent="center">
+                <Grid item xs={12} sm={8} md={6}>
+                  <Box my={4}>
+                    <TextField
+                      label="Search Notes"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton aria-label="search">
+                              <SearchIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid container spacing={4}>
+                {filteredNotes.map((note) => (
+                  <Grid item key={note.id} xs={12} sm={12} md={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Card style={{width:'80%'}}>
+                      <CardMedia
+                        height="140"
+                        alt={note.title}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          {note.title}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          {note.content.substring(0, 100)}...
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Button size="small" color="primary" onClick={() => handleReadMore(note.id)}>
+                          Read More
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </>
+          )}
+        </div>
+      </div>
     </>
-
   );
 }

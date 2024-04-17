@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
-
-function PublicNoteDetails() {
-    const { noteId } = useParams();
-    const navigate = useNavigate();
-    const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } = useAuth0();
-    const [note, setNote] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [openLoginDialog, setOpenLoginDialog] = useState(false);
+function PublicNoteDetails({ noteId, onClose }) {
+  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } = useAuth0();
+  const [note, setNote] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [openLoginDialog, setOpenLoginDialog] = useState(false);
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -29,9 +25,6 @@ function PublicNoteDetails() {
 
     fetchNote();
   }, [noteId]);
-
-
-
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -56,9 +49,9 @@ function PublicNoteDetails() {
 
   const toggleFavorite = async () => {
     if (!isAuthenticated) {
-        setOpenLoginDialog(true);
-        return;
-      }
+      setOpenLoginDialog(true);
+      return;
+    }
 
     try {
       const accessToken = await getAccessTokenSilently();
@@ -92,7 +85,6 @@ function PublicNoteDetails() {
     loginWithRedirect();
   };
 
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -101,9 +93,6 @@ function PublicNoteDetails() {
     return <div>{error}</div>;
   }
 
-  const handleClose = () => {
-    navigate("/");
-  };
   return (
     <div className="note-details">
       <h2>{note.title}</h2>
@@ -111,7 +100,7 @@ function PublicNoteDetails() {
       <button onClick={toggleFavorite}>
         {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
       </button>
-      <button onClick={handleClose}>Close</button>
+      <button onClick={onClose}>Close</button>
 
       <Dialog open={openLoginDialog} onClose={handleLoginDialogClose}>
         <DialogTitle>Login Required</DialogTitle>
