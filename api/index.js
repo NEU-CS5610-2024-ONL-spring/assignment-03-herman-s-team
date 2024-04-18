@@ -59,7 +59,6 @@ app.get("/notes", requireAuth, async (req, res) => {
   }
 });
 
-
 app.get("/public/notes", async (req, res) => {
   try {
     // get all public notes
@@ -77,7 +76,6 @@ app.get("/public/notes", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 // creates a note
 app.post("/notes", requireAuth, async (req, res) => {
@@ -135,7 +133,6 @@ app.delete("/notes/:id", requireAuth, async (req, res) => {
   }
 });
 
-
 // get a note by id
 app.get("/notes/:id", requireAuth, async (req, res) => {
   const noteId = parseInt(req.params.id);
@@ -154,7 +151,6 @@ app.get("/notes/:id", requireAuth, async (req, res) => {
     res.json(note);
   }
 });
-
 
 // get a public note by id
 app.get("/public/notes/:id", async (req, res) => {
@@ -208,7 +204,6 @@ app.put("/notes/:id", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 // check if a note is favorited by the authenticated user
 app.get("/favorites", requireAuth, async (req, res) => {
@@ -269,7 +264,6 @@ app.post("/favorites", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Failed to add favorite" });
   }
 });
-
 
 // delete a favorite
 app.delete("/favorites", requireAuth, async (req, res) => {
@@ -376,6 +370,7 @@ app.post("/verify-user", requireAuth, async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log("Server running on http://localhost:8000 🎉 🚀");
+const PORT = parseInt(process.env.PORT) || 8000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT} 🎉 🚀`);
 });
