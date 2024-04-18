@@ -50,9 +50,9 @@ export default function AppLayout() {
         <ListItem button component={Link} to="/app/debugger" onClick={() => setDrawerOpen(false)}>
           <ListItemText primary="Auth Debugger" />
         </ListItem>
-        <ListItem button onClick={() => logout({ returnTo: "https://assignment-03-herman-s-team-avru2vpmo-ting-fungs-projects.vercel.app" })}>
-          <ListItemText primary="Logout" />
-        </ListItem>
+<ListItem button onClick={() => logout({ returnTo: 'https://assignment-03-herman-s-team-avru2vpmo-ting-fungs-projects.vercel.app' })}>
+  <ListItemText primary="Logout" />
+</ListItem>
       </List>
     </Drawer>
   );
@@ -87,7 +87,7 @@ export default function AppLayout() {
               <Button color="inherit" component={Link} to="/app/debugger">
                 Auth Debugger
               </Button>
-              <Button color="inherit" onClick={() => logout({ returnTo: window.location.origin })}>
+              <Button color="inherit" onClick={() => logout({ returnTo: "https://assignment-03-herman-s-team-avru2vpmo-ting-fungs-projects.vercel.app" })}>
                 Logout
               </Button>
             </>
