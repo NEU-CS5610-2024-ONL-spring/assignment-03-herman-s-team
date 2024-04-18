@@ -31,12 +31,6 @@ function NoteList() {
         setLoading(false);
       }
     };
-
-    if (accessToken) {
-      fetchNotes();
-    } else {
-      setLoading(false);
-    }
   }, [accessToken]);
 
   if (loading) {
