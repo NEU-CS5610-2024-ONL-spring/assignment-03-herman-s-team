@@ -50,7 +50,7 @@ export default function AppLayout() {
         <ListItem button component={Link} to="/app/debugger" onClick={() => setDrawerOpen(false)}>
           <ListItemText primary="Auth Debugger" />
         </ListItem>
-        <ListItem button onClick={() => logout({ returnTo: window.location.origin })}>
+        <ListItem button onClick={() => logout({ returnTo: "https://assignment-03-herman-s-team-avru2vpmo-ting-fungs-projects.vercel.app" })}>
           <ListItemText primary="Logout" />
         </ListItem>
       </List>
