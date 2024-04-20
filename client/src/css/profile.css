@@ -1,0 +1,55 @@
+/* Profile.css */
+.profile {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  @media screen and (max-width: 600px) {
+    .profile {
+      padding: 1rem;
+    }
+  }
+  
+  .profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-name {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .profile-bio {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-section {
+    margin-bottom: 2rem;
+  }
+  
+  .profile-section-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-section-content {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  .profile-form {
+    margin-top: 2rem;
+  }
